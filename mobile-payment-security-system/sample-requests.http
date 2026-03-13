@@ -1,0 +1,46 @@
+GET http://localhost:8080/api/health
+
+###
+
+POST http://localhost:8080/api/devices/register
+Content-Type: application/json
+
+{
+  "userId": "jeshwin",
+  "deviceId": "IMEI-490154203237518",
+  "deviceFingerprint": "PIXEL8-ANDROID15",
+  "pin": "4321",
+  "biometricToken": "BIO-OK",
+  "location": "Oklahoma City"
+}
+
+###
+
+POST http://localhost:8080/api/auth/login
+Content-Type: application/json
+
+{
+  "userId": "jeshwin",
+  "deviceId": "IMEI-490154203237518",
+  "pin": "4321",
+  "biometricToken": "BIO-OK"
+}
+
+###
+
+POST http://localhost:8080/api/payments/initiate
+Content-Type: application/json
+
+{
+  "userId": "jeshwin",
+  "deviceId": "IMEI-490154203237518",
+  "amount": "2800.00",
+  "currency": "USD",
+  "merchant": "International Electronics",
+  "channel": "Card",
+  "location": "Miami"
+}
+
+###
+
+GET http://localhost:8080/api/frauds/alerts
