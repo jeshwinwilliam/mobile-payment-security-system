@@ -1,93 +1,151 @@
-Mobile Payment Security System
-Mobile Payment Security System is a Java project built for Jeshwin William James to showcase secure mobile payment workflows, device-based authentication, fraud detection, and real-time payment authorization decisions.
+# Mobile Payment Security System
 
-What this project demonstrates
-Device onboarding with IMEI-style device registration and fingerprint binding
-Multi-factor login using PIN and biometric token validation
-Real-time payment risk scoring based on amount, merchant, device trust, and location change
-Step-up authentication using OTP for suspicious transactions
-Fraud alert generation for blocked or risky payment attempts
-Clean API design and a project structure that is easy to discuss in interviews
-Tech stack
-Java 25
-Built-in HttpServer for lightweight REST endpoints
-In-memory storage for demo-friendly local execution
-Project structure
+Mobile Payment Security System is a backend-focused Java project designed to simulate secure mobile payment workflows, device-based authentication, fraud detection, and real-time payment authorization.
+
+The project focuses on building a production-style payment security pipeline with layered backend services for authentication, risk analysis, and transaction validation.
+
+## What This Project Demonstrates
+
+* Device onboarding with IMEI-based device registration
+* Multi-factor authentication using PIN and biometric validation
+* Real-time payment risk scoring based on transaction amount, device trust, merchant type, and location changes
+* OTP-based step-up authentication for suspicious transactions
+* Fraud alert generation for blocked or high-risk payment attempts
+* REST-style backend API workflows
+* Production-oriented backend architecture and service design
+
+## Tech Stack
+
+* Java 25
+* Built-in Java HttpServer for lightweight REST APIs
+* In-memory persistence for local execution and demo workflows
+
+## Project Structure
+
+```text
 mobile-payment-security-system/
-  README.md
-  resume-project-entry.md
-  sample-requests.http
-  src/com/jeshwin/mobilepayments/
-Run locally
+├── README.md
+├── resume-project-entry.md
+├── sample-requests.http
+└── src/com/jeshwin/mobilepayments/
+```
+
+## Running the Project
+
+```bash
 cd /Users/jeshwinwilliam/Documents/Playground/mobile-payment-security-system
+
 mkdir -p out
+
 find src -name '*.java' -print0 | xargs -0 javac --release 25 -d out
+
 java -cp out com.jeshwin.mobilepayments.MobilePaymentSecurityApplication
-Server starts at http://localhost:8080.
+```
 
-API endpoints
-Health check
+Server starts at:
+
+```text
+http://localhost:8080
+```
+
+## API Endpoints
+
+### Health Check
+
+```bash
 curl http://localhost:8080/api/health
-Register a device
+```
+
+### Register a Device
+
+```bash
 curl -X POST http://localhost:8080/api/devices/register \
-  -H "Content-Type: application/json" \
-  -d '{
-    "userId":"jeshwin",
-    "deviceId":"IMEI-490154203237518",
-    "deviceFingerprint":"PIXEL8-ANDROID15",
-    "pin":"4321",
-    "biometricToken":"BIO-OK",
-    "location":"Oklahoma City"
-  }'
-Login from trusted device
+-H "Content-Type: application/json" \
+-d '{
+  "userId":"jeshwin",
+  "deviceId":"IMEI-490154203237518",
+  "deviceFingerprint":"PIXEL8-ANDROID15",
+  "pin":"4321",
+  "biometricToken":"BIO-OK",
+  "location":"Oklahoma City"
+}'
+```
+
+### Login from Trusted Device
+
+```bash
 curl -X POST http://localhost:8080/api/auth/login \
-  -H "Content-Type: application/json" \
-  -d '{
-    "userId":"jeshwin",
-    "deviceId":"IMEI-490154203237518",
-    "pin":"4321",
-    "biometricToken":"BIO-OK"
-  }'
-Initiate a low-risk payment
-curl -X POST http://localhost:8080/api/payments/initiate \
-  -H "Content-Type: application/json" \
-  -d '{
-    "userId":"jeshwin",
-    "deviceId":"IMEI-490154203237518",
-    "amount":"120.50",
-    "currency":"USD",
-    "merchant":"Spotify",
-    "channel":"Wallet",
-    "location":"Oklahoma City"
-  }'
-Initiate a higher-risk payment
-curl -X POST http://localhost:8080/api/payments/initiate \
-  -H "Content-Type: application/json" \
-  -d '{
-    "userId":"jeshwin",
-    "deviceId":"IMEI-490154203237518",
-    "amount":"2800.00",
-    "currency":"USD",
-    "merchant":"International Electronics",
-    "channel":"Card",
-    "location":"Miami"
-  }'
-If a payment is challenged, approve it with OTP 123456.
+-H "Content-Type: application/json" \
+-d '{
+  "userId":"jeshwin",
+  "deviceId":"IMEI-490154203237518",
+  "pin":"4321",
+  "biometricToken":"BIO-OK"
+}'
+```
 
+### Initiate Low-Risk Payment
+
+```bash
+curl -X POST http://localhost:8080/api/payments/initiate \
+-H "Content-Type: application/json" \
+-d '{
+  "userId":"jeshwin",
+  "deviceId":"IMEI-490154203237518",
+  "amount":"120.50",
+  "currency":"USD",
+  "merchant":"Spotify",
+  "channel":"Wallet",
+  "location":"Oklahoma City"
+}'
+```
+
+### Initiate High-Risk Payment
+
+```bash
+curl -X POST http://localhost:8080/api/payments/initiate \
+-H "Content-Type: application/json" \
+-d '{
+  "userId":"jeshwin",
+  "deviceId":"IMEI-490154203237518",
+  "amount":"2800.00",
+  "currency":"USD",
+  "merchant":"International Electronics",
+  "channel":"Card",
+  "location":"Miami"
+}'
+```
+
+If a payment is flagged as suspicious, OTP verification is required before approval.
+
+### Approve Payment with OTP
+
+```bash
 curl -X POST http://localhost:8080/api/payments/approve \
-  -H "Content-Type: application/json" \
-  -d '{
-    "paymentId":"PASTE_PAYMENT_ID_HERE",
-    "otp":"123456"
-  }'
-View fraud alerts
-curl http://localhost:8080/api/frauds/alerts
-How to explain this in interviews
-The project simulates a payment security gateway that validates device trust before allowing mobile transactions.
-The backend uses layered services for registration, authentication, risk scoring, and payment authorization.
-Suspicious transactions trigger OTP step-up verification instead of immediate approval.
-Fraud alerts are stored and exposed through an API to mimic operational monitoring workflows.
-Resume-ready project title
-Mobile Payment Security System | Java, REST APIs, Authentication, Fraud Detection
+-H "Content-Type: application/json" \
+-d '{
+  "paymentId":"PASTE_PAYMENT_ID_HERE",
+  "otp":"123456"
+}'
+```
 
-See resume-project-entry.md for polished resume bullet points.
+### View Fraud Alerts
+
+```bash
+curl http://localhost:8080/api/frauds/alerts
+```
+
+## System Design Overview
+
+The system simulates a mobile payment security gateway that validates device trust before authorizing transactions.
+
+The backend architecture is organized into layered services for:
+
+* Device registration
+* Authentication
+* Risk analysis
+* Payment authorization
+* Fraud monitoring
+
+High-risk transactions trigger OTP-based step-up authentication instead of immediate approval. Fraud alerts are generated and exposed through backend APIs to simulate operational monitoring workflows used in real-world payment systems.
+
